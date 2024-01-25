@@ -35,6 +35,15 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Freeze"",
+                    ""type"": ""Button"",
+                    ""id"": ""abf3a1f9-c1a4-4966-8cf2-5fdfa9f33025"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -70,6 +79,17 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8be44ea9-1a39-427a-8002-53179613fa91"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Freeze"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -79,6 +99,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_Freeze = m_Player.FindAction("Freeze", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,11 +162,13 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_Freeze;
     public struct PlayerActions
     {
         private @InputControls m_Wrapper;
         public PlayerActions(@InputControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @Freeze => m_Wrapper.m_Player_Freeze;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -158,6 +181,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @Freeze.started += instance.OnFreeze;
+            @Freeze.performed += instance.OnFreeze;
+            @Freeze.canceled += instance.OnFreeze;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -165,6 +191,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @Freeze.started -= instance.OnFreeze;
+            @Freeze.performed -= instance.OnFreeze;
+            @Freeze.canceled -= instance.OnFreeze;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -185,5 +214,6 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnFreeze(InputAction.CallbackContext context);
     }
 }

@@ -20,8 +20,14 @@ public class PlayMovement : MonoBehaviour
     private void OnEnable()
     {
         CustomInput.Enable();
-        CustomInput.Player.Move.performed += Move;
+        CustomInput.Player.Move.performed += Move;    
         CustomInput.Player.Move.canceled += StopMove;
+        CustomInput.Player.Freeze.performed += Freeze;
+    }
+
+    private void Freeze(InputAction.CallbackContext obj)
+    {
+        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     private void StopMove(InputAction.CallbackContext obj)
