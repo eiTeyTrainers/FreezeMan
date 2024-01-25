@@ -11,6 +11,12 @@ public class PlayMovement : MonoBehaviour
     public float Speed = 5f;
     private Rigidbody2D _rigidbody2D;
     
+    //Jump
+    public float jumpForce;
+    [SerializeField] float jumpStartTime;
+    private float jumpTime;
+    private bool isJumping;
+    private bool isGrounded = true;
     void Awake()
     {
         CustomInput = new InputControls();
@@ -51,5 +57,25 @@ public class PlayMovement : MonoBehaviour
         float oldY = _rigidbody2D.velocity.y;
         float x = _moveVector * Speed;
         _rigidbody2D.velocity = new Vector2(x, oldY);
+    }
+    private void Jump(){
+        if(isGrounded == true)//add jupm input
+        {
+            isJumping = true;
+            jumpTime = jumpStartTime;
+            _rigidbody2D.velocity = Vector2.up * jumpForce;
+        }
+        if(jumpTime > 0){
+            _rigidbody2D.velocity = Vector2.up * jumpForce;
+            jumpTime -= Time.deltaTime;
+        }else{
+            isJumping = false;
+        
+        }
+
+    if(Input.GetButtonUp("T"))
+    {
+        isJumping = false;
+    }
     }
 }
