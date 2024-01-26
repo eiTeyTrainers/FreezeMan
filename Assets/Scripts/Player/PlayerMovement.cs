@@ -12,6 +12,7 @@ public class PlayMovement : MonoBehaviour
     private float _moveVector;
     public float Speed = 5f;
     private Rigidbody2D _rigidbody2D;
+    public float torqueFactor = -0.5f;
     
     //Jump
     public float jumpForce;
@@ -83,7 +84,7 @@ public class PlayMovement : MonoBehaviour
         if (jumpValue == 1 && isJumping)
         {
             if(jumpTime > 0){
-                _rigidbody2D.velocity = Vector2.up * jumpForce;
+                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpForce);
                 jumpTime -= Time.deltaTime;
             }else{
                 isJumping = false;
@@ -96,6 +97,10 @@ public class PlayMovement : MonoBehaviour
     {
         float oldY = _rigidbody2D.velocity.y;
         float x = _moveVector * Speed;
+        if (!isGrounded)
+        {
+            _rigidbody2D.totalTorque = x * torqueFactor;
+        }
         _rigidbody2D.velocity = new Vector2(x, oldY);
     }
 
@@ -116,16 +121,28 @@ public class PlayMovement : MonoBehaviour
         isJumping = false;
     }
 
+    private bool IsCollisionGround(Collision2D other)
+    {
+        Vector2 surfaceNormal = other.contacts[0].normal;
+        float rightAngle = Vector2.Angle(surfaceNormal, Vector2.right);
+        if (rightAngle > 90)
+        {
+            rightAngle = 180 - rightAngle;
+        }
+
+        return rightAngle > 30;
+    }
+    
     private void OnCollisionExit2D(Collision2D other)
     {   
-        if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            isGrounded = false;
-        }
+        isGrounded = false;
     }
     private void OnCollisionEnter2D(Collision2D other)
-    {   
-        if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+        Vector2 SurfaceNormal = other.contacts[0].normal;
+        Debug.Log("Right Angle:" + Vector2.Angle(SurfaceNormal, Vector2.right));
+        Debug.Log("Left Angle:" + Vector2.Angle(SurfaceNormal, Vector2.left));
+        if(IsCollisionGround(other))
         {
             isGrounded = true;
         }
