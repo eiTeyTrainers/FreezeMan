@@ -52,6 +52,10 @@ public class PlayMovement : MonoBehaviour
     private void Freeze(InputAction.CallbackContext obj)
     {
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        int newLayer = LayerMask.NameToLayer("Ground");
+        gameObject.layer = newLayer;
+
+
         GameObject player = Players[Random.Range(0, Players.Length)];
         Instantiate(player, SpawnPosition.position, Quaternion.identity);
         CustomInput.Disable();
@@ -86,6 +90,8 @@ public class PlayMovement : MonoBehaviour
                 isJumping = false;
             }
         }
+
+        OnDrawGizmos();
     }
 
     private void FixedUpdate()
