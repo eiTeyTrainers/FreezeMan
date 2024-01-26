@@ -21,9 +21,7 @@ public class NextScene : MonoBehaviour
 
     public void OnFadeComplete()
     {
-        Debug.Log("niga");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         animator.SetBool(FadeOut,false);
-
     }
 }

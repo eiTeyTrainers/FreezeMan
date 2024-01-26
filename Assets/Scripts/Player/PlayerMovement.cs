@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
@@ -14,10 +15,8 @@ public class PlayMovement : MonoBehaviour
     
     //Jump
     public float jumpForce;
-    public Transform feetPos;
     public LayerMask whatIsGround;
     [SerializeField] float jumpStartTime;
-    [SerializeField]  float checkRadius;
     private float jumpTime;
     private bool isJumping;
     private bool isGrounded = true;
@@ -54,12 +53,12 @@ public class PlayMovement : MonoBehaviour
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         int newLayer = LayerMask.NameToLayer("Ground");
         gameObject.layer = newLayer;
-
+        gameObject.transform.Find("Collider").gameObject.layer = newLayer;
 
         GameObject player = Players[Random.Range(0, Players.Length)];
         Instantiate(player, SpawnPosition.position, Quaternion.identity);
         CustomInput.Disable();
-
+        
     }
 
     private void StopMove(InputAction.CallbackContext obj)
@@ -91,7 +90,6 @@ public class PlayMovement : MonoBehaviour
             }
         }
 
-        OnDrawGizmos();
     }
 
     private void FixedUpdate()
@@ -103,8 +101,6 @@ public class PlayMovement : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext obj)
     {
-        isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius,whatIsGround);
-        
         if(isGrounded)
         {
             _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
@@ -120,8 +116,18 @@ public class PlayMovement : MonoBehaviour
         isJumping = false;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(feetPos.position,checkRadius);
+    private void OnCollisionExit2D(Collision2D other)
+    {   
+        if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = false;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D other)
+    {   
+        if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = true;
+        }
     }
 }
