@@ -22,11 +22,11 @@ public class PlayMovement : MonoBehaviour
     private bool isJumping;
     private bool isGrounded = true;
 
-    private float coyoteTime = 0.2f;
+    private const float coyoteTime = 0.2f;
 
     private float coyoteTimeCounter;
 
-    private float jumpBufferTime = 0.2f;
+    private const float jumpBufferTime = 0.2f;
     private float jumpBufferTimeCounter;
     
     //freeze 
@@ -106,7 +106,9 @@ public class PlayMovement : MonoBehaviour
         {
             coyoteTimeCounter -= Time.deltaTime;
         }
-
+        
+        jumpBufferTimeCounter -= Time.deltaTime;
+        
         if (coyoteTimeCounter > 0f && jumpBufferTimeCounter > 0f)
         {
             Jump();
@@ -131,6 +133,7 @@ public class PlayMovement : MonoBehaviour
     }
     private void Jump()
     {
+        Debug.Log("isGrounded: " + isGrounded + " coyote timer: " + coyoteTimeCounter + " jumpbuffer timer " + jumpBufferTimeCounter);
         _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
 
         isJumping = true;
@@ -164,9 +167,6 @@ public class PlayMovement : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Vector2 SurfaceNormal = other.contacts[0].normal;
-        Debug.Log("Right Angle:" + Vector2.Angle(SurfaceNormal, Vector2.right));
-        Debug.Log("Left Angle:" + Vector2.Angle(SurfaceNormal, Vector2.left));
         if(IsCollisionGround(other))
         {
             isGrounded = true;
