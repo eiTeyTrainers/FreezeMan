@@ -7,17 +7,26 @@ using UnityEngine;
 public class SlipperyFloor : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float slippyTime = 0f;
-    public Vector2 amongus;
-    private float slippyforce = 20;
-    private Collider2D _Collider2Dbody;
+    private float slippyTime = 0f;
+    public float slippyTimeMax = 3f;
+    public Vector2 slipperyVector;
+    public float slippyforce = 2;
+    private Collider2D parentRigidbody;
     public PhysicsMaterial2D OnTrigge_material;
 
 
     void Start()
     {
-        _Collider2Dbody = gameObject.transform.GetComponent<Collider2D>();
+        if (gameObject.transform.parent != null)
+        {
+            parentRigidbody = gameObject.transform.parent.GetComponent<Collider2D>();
+        }
+        else
+        {
+            Debug.LogWarning("SlipperyFloor: No parent with Collider2D found.");
+        }
     }
+
 
     // Update is called once per frame
     void FixedUpdate()
@@ -28,22 +37,20 @@ public class SlipperyFloor : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         PlayMovement Player = other.gameObject.GetComponent<PlayMovement>();
         if (Player)
         {
-            _Collider2Dbody.sharedMaterial = OnTrigge_material;
+            parentRigidbody.sharedMaterial = OnTrigge_material;
 
             if (Player.moveVector != 0)
             {
-                slippyTime = 3f;
+                slippyTime = slippyTimeMax;
             }
 
-            amongus = new Vector2(slippyTime * slippyforce * Player.lastMove, 0);
-            Debug.Log(Player.moveVector);
-
-            Player.GetComponent<Rigidbody2D>().AddForce(amongus, ForceMode2D.Force);
+            slipperyVector = new Vector2(slippyTime * slippyforce * Player.lastMove, 0);
+            Player.GetComponent<Rigidbody2D>().AddForce(slipperyVector, ForceMode2D.Force);
         }
     }
 }
