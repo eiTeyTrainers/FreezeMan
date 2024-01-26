@@ -103,7 +103,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 2
+  m_GravityScale: 4
   m_Material: {fileID: 6200000, guid: f2e5f938a78777d478279ec3794fe236, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -129,11 +129,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 6
   torqueFactor: -0.5
-  jumpForce: 5
+  jumpForce: 7
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
-  jumpStartTime: 0.52
+  jumpStartTime: 0.2
 --- !u!61 &7073995357869552397
 BoxCollider2D:
   m_ObjectHideFlags: 0
