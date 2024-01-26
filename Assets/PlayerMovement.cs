@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class PlayMovement : MonoBehaviour
 {
@@ -13,27 +14,48 @@ public class PlayMovement : MonoBehaviour
     
     //Jump
     public float jumpForce;
+    public Transform feetPos;
+    public LayerMask whatIsGround;
     [SerializeField] float jumpStartTime;
+    [SerializeField]  float checkRadius;
     private float jumpTime;
     private bool isJumping;
     private bool isGrounded = true;
+    
+    //freeze 
+    private GameObject[] Players;
+    private Transform SpawnPosition;
+    
     void Awake()
     {
         CustomInput = new InputControls();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        SpawnPosition =  GameObject.Find("SpawnPoint").transform;
     }
-    
+
+    private void Start()
+    {
+        Players = Resources.LoadAll<GameObject>("Players");
+        
+    }
+
     private void OnEnable()
     {
         CustomInput.Enable();
         CustomInput.Player.Move.performed += Move;    
         CustomInput.Player.Move.canceled += StopMove;
         CustomInput.Player.Freeze.performed += Freeze;
+        CustomInput.Player.Jump.performed += Jump;
+        CustomInput.Player.Jump.canceled += StopJumping;
     }
 
     private void Freeze(InputAction.CallbackContext obj)
     {
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        GameObject player = Players[Random.Range(0, Players.Length)];
+        Instantiate(player, SpawnPosition.position, Quaternion.identity);
+        CustomInput.Disable();
+
     }
 
     private void StopMove(InputAction.CallbackContext obj)
@@ -54,28 +76,46 @@ public class PlayMovement : MonoBehaviour
 
     private void Update()
     {
+        float jumpValue = CustomInput.Player.Jump.ReadValue<float>();
+        if (jumpValue == 1 && isJumping)
+        {
+            if(jumpTime > 0){
+                _rigidbody2D.velocity = Vector2.up * jumpForce;
+                jumpTime -= Time.deltaTime;
+            }else{
+                isJumping = false;
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
         float oldY = _rigidbody2D.velocity.y;
         float x = _moveVector * Speed;
         _rigidbody2D.velocity = new Vector2(x, oldY);
     }
-    private void Jump(){
-        if(isGrounded == true)//add jupm input
+
+    private void Jump(InputAction.CallbackContext obj)
+    {
+        isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius,whatIsGround);
+        
+        if(isGrounded)
         {
+            _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
+
             isJumping = true;
             jumpTime = jumpStartTime;
             _rigidbody2D.velocity = Vector2.up * jumpForce;
         }
-        if(jumpTime > 0){
-            _rigidbody2D.velocity = Vector2.up * jumpForce;
-            jumpTime -= Time.deltaTime;
-        }else{
-            isJumping = false;
-        
-        }
-
-    if(Input.GetButtonUp("T"))
+    
+    }
+    private void StopJumping(InputAction.CallbackContext obj)
     {
         isJumping = false;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(feetPos.position,checkRadius);
     }
 }
