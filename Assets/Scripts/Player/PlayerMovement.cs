@@ -9,10 +9,10 @@ using Random = UnityEngine.Random;
 public class PlayMovement : MonoBehaviour
 {
     public InputControls CustomInput = null;
-    private float _moveVector;
+    public float moveVector;
     public float Speed = 5f;
-    private Rigidbody2D _rigidbody2D;
-    
+    public Rigidbody2D rigidbody2D;
+
     //Jump
     public float jumpForce;
     public LayerMask whatIsGround;
@@ -20,28 +20,29 @@ public class PlayMovement : MonoBehaviour
     private float jumpTime;
     private bool isJumping;
     private bool isGrounded = true;
-    
+
     //freeze 
     private GameObject[] Players;
     private Transform SpawnPosition;
-    
+    public bool isFrozen = false;
+    public float lastMove = 0;
+
     void Awake()
     {
         CustomInput = new InputControls();
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-        SpawnPosition =  GameObject.Find("SpawnPoint").transform;
+        rigidbody2D = GetComponent<Rigidbody2D>();
+        SpawnPosition = GameObject.Find("SpawnPoint").transform;
     }
 
     private void Start()
     {
         Players = Resources.LoadAll<GameObject>("Players");
-        
     }
 
     private void OnEnable()
     {
         CustomInput.Enable();
-        CustomInput.Player.Move.performed += Move;    
+        CustomInput.Player.Move.performed += Move;
         CustomInput.Player.Move.canceled += StopMove;
         CustomInput.Player.Freeze.performed += Freeze;
         CustomInput.Player.Jump.performed += Jump;
@@ -50,20 +51,20 @@ public class PlayMovement : MonoBehaviour
 
     private void Freeze(InputAction.CallbackContext obj)
     {
-        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         int newLayer = LayerMask.NameToLayer("Ground");
         gameObject.layer = newLayer;
         gameObject.transform.Find("Collider").gameObject.layer = newLayer;
+        isFrozen = true;
 
         GameObject player = Players[Random.Range(0, Players.Length)];
         Instantiate(player, SpawnPosition.position, Quaternion.identity);
         CustomInput.Disable();
-        
     }
 
     private void StopMove(InputAction.CallbackContext obj)
     {
-        _moveVector = 0;
+        moveVector = 0;
     }
 
     private void OnDisable()
@@ -73,7 +74,8 @@ public class PlayMovement : MonoBehaviour
 
     private void Move(InputAction.CallbackContext callbackContext)
     {
-        _moveVector = callbackContext.ReadValue<float>();
+        lastMove = callbackContext.ReadValue<float>();
+        moveVector = callbackContext.ReadValue<float>();
     }
 
 
@@ -82,50 +84,53 @@ public class PlayMovement : MonoBehaviour
         float jumpValue = CustomInput.Player.Jump.ReadValue<float>();
         if (jumpValue == 1 && isJumping)
         {
-            if(jumpTime > 0){
-                _rigidbody2D.velocity = Vector2.up * jumpForce;
+            if (jumpTime > 0)
+            {
+                rigidbody2D.velocity = Vector2.up * jumpForce;
                 jumpTime -= Time.deltaTime;
-            }else{
+            }
+            else
+            {
                 isJumping = false;
             }
         }
-
     }
 
     private void FixedUpdate()
     {
-        float oldY = _rigidbody2D.velocity.y;
-        float x = _moveVector * Speed;
-        _rigidbody2D.velocity = new Vector2(x, oldY);
+        float oldY = rigidbody2D.velocity.y;
+        float x = moveVector * Speed;
+        rigidbody2D.velocity = new Vector2(x, oldY);
     }
 
     private void Jump(InputAction.CallbackContext obj)
     {
-        if(isGrounded)
+        if (isGrounded)
         {
-            _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
+            rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
 
             isJumping = true;
             jumpTime = jumpStartTime;
-            _rigidbody2D.velocity = Vector2.up * jumpForce;
+            rigidbody2D.velocity = Vector2.up * jumpForce;
         }
-    
     }
+
     private void StopJumping(InputAction.CallbackContext obj)
     {
         isJumping = false;
     }
 
     private void OnCollisionExit2D(Collision2D other)
-    {   
-        if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = false;
         }
     }
+
     private void OnCollisionEnter2D(Collision2D other)
-    {   
-        if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = true;
         }
