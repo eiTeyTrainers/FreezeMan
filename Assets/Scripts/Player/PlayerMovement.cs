@@ -21,6 +21,13 @@ public class PlayMovement : MonoBehaviour
     private float jumpTime;
     private bool isJumping;
     private bool isGrounded = true;
+
+    private float coyoteTime = 0.2f;
+
+    private float coyoteTimeCounter;
+
+    private float jumpBufferTime = 0.2f;
+    private float jumpBufferTimeCounter;
     
     //freeze 
     private GameObject[] Players;
@@ -45,7 +52,7 @@ public class PlayMovement : MonoBehaviour
         CustomInput.Player.Move.performed += Move;    
         CustomInput.Player.Move.canceled += StopMove;
         CustomInput.Player.Freeze.performed += Freeze;
-        CustomInput.Player.Jump.performed += Jump;
+        CustomInput.Player.Jump.performed += JumpButtonPressed;
         CustomInput.Player.Jump.canceled += StopJumping;
     }
 
@@ -91,6 +98,20 @@ public class PlayMovement : MonoBehaviour
             }
         }
 
+        if (isGrounded)
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+
+        if (coyoteTimeCounter > 0f && jumpBufferTimeCounter > 0f)
+        {
+            Jump();
+        }
+
     }
 
     private void FixedUpdate()
@@ -104,16 +125,20 @@ public class PlayMovement : MonoBehaviour
         _rigidbody2D.velocity = new Vector2(x, oldY);
     }
 
-    private void Jump(InputAction.CallbackContext obj)
+    private void JumpButtonPressed(InputAction.CallbackContext obj)
     {
-        if(isGrounded)
-        {
-            _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
+        jumpBufferTimeCounter = jumpBufferTime;
+    }
+    private void Jump()
+    {
+        _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
 
-            isJumping = true;
-            jumpTime = jumpStartTime;
-            _rigidbody2D.velocity = Vector2.up * jumpForce;
-        }
+        isJumping = true;
+        jumpTime = jumpStartTime;
+        _rigidbody2D.velocity = Vector2.up * jumpForce;
+
+        coyoteTimeCounter = 0f;
+        jumpBufferTimeCounter = 0f;
     
     }
     private void StopJumping(InputAction.CallbackContext obj)
