@@ -87,11 +87,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4134729903940004749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99677401da993ad4bbe6862e1b1159bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 01281a1e5dcbb464184c22e71ebcb41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnTrigge_material: {fileID: 6200000, guid: e50085701a44caf4eaaf5a9feffc34c4, type: 2}
-  OnTriggerExit_material: {fileID: 6200000, guid: f2e5f938a78777d478279ec3794fe236, type: 2}
+  OnTrigge_material: {fileID: 6200000, guid: 44bd731840c9eee479db17a030585c8c, type: 2}
+  OnTriggerExit_material: {fileID: 0}
 --- !u!1 &5951401416155410685
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +318,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   jumpStartTime: 0.2
+  jumpTime: 0
+  isJumping: 0
   isFrozen: 0
   lastMove: 0
 --- !u!114 &6215310185886593296
@@ -344,7 +346,6 @@ MonoBehaviour:
   - {fileID: 1778323358, guid: 2f50c57ea9d4936458ed99b52a42fc3e, type: 3}
   - {fileID: 947904944, guid: 2f50c57ea9d4936458ed99b52a42fc3e, type: 3}
   - {fileID: -1360212834, guid: 2f50c57ea9d4936458ed99b52a42fc3e, type: 3}
-  forChangeFreezeAmount: 5
   isFrozen: 0
   FrozenSprite: {fileID: 469596085, guid: 2f50c57ea9d4936458ed99b52a42fc3e, type: 3}
   WonSprite: {fileID: 2082226110, guid: 2f50c57ea9d4936458ed99b52a42fc3e, type: 3}
