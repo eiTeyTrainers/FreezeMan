@@ -247,6 +247,7 @@ MonoBehaviour:
   _freezeCounter: 0
   time: 0
   stopTimer: 0
+  shapes: 
 --- !u!4 &241610059
 Transform:
   m_ObjectHideFlags: 0
@@ -420,6 +421,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29697d2857dc94e4faad311838dc1470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frozenCircle: {fileID: 3975399428661658202, guid: 88d030b712d9a8149a275f64291d1b73, type: 3}
+  frozenTriangle: {fileID: 3975399428661658202, guid: f3f660e4ae418344a997847249855011, type: 3}
+  frozenBox: {fileID: 3975399428661658202, guid: a0613aeb5e0324e45ab36dadf63ef72b, type: 3}
+  frozenOval: {fileID: 3975399428661658202, guid: d858cc2c5889d3b4fac8bf1783363327, type: 3}
+  frozenRectangle: {fileID: 6726342210759420155, guid: ff09187cc72d9e949a606c6a40eed37a, type: 3}
+  frozenTrianglePortal: {fileID: 3975399428661658202, guid: 956a4352c23346344ad923768d78c25e, type: 3}
 --- !u!1 &1698501567
 GameObject:
   m_ObjectHideFlags: 0

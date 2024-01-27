@@ -17,11 +17,6 @@ public class ChangeMaterialOnTrigger : MonoBehaviour
         parentRigidbody = gameObject.transform.parent.GetComponent<Rigidbody2D>();
     }
 
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (parent != null && parent.isFrozen && parentRigidbody)

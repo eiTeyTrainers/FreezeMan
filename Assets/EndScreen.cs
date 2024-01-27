@@ -8,12 +8,12 @@ public class EndScreen : MonoBehaviour
     private TextMeshProUGUI timeText; 
     private TextMeshProUGUI KillCountText; 
     private gameMode gameMode;
-    private GameObject frozenCircle;
-    private GameObject frozenTriangle;
-    private GameObject frozenBox;
-    private GameObject frozenOval;
-    private GameObject frozenRectangle;
-    private GameObject frozenTrianglePortal;
+    public GameObject frozenCircle;
+    public GameObject frozenTriangle;
+    public GameObject frozenBox;
+    public GameObject frozenOval;
+    public GameObject frozenRectangle;
+    public GameObject frozenTrianglePortal;
     private float NextShapeOffset;
 
     void Awake()
@@ -27,13 +27,15 @@ public class EndScreen : MonoBehaviour
         float milliseconds = Mathf.FloorToInt((gameMode.time * 1000) % 1000);
         UpdateTimeText(minutes, seconds, milliseconds);
         
-        
+        GameObject canvasObject = GameObject.Find("Canvas");
+
         KillCountText = GameObject.Find("KillCount").GetComponent<TextMeshProUGUI>();
         float killCount = gameMode._freezeCounter;
         string timeString = string.Format("you won but look what you lost {0:00}", killCount);
 
         KillCountText.text = timeString;
         Vector3 position = new Vector3(0,0,0);
+        Debug.Log(gameMode.shapes.Count);
         for (int i = 0; i< gameMode.shapes.Count; i++)
         {
             
@@ -68,6 +70,7 @@ public class EndScreen : MonoBehaviour
                 currentShape.transform.localScale = new Vector3(1f, 1f, 1f);
             }
             NextShapeOffset += 60;
+            
         }
     }
     
