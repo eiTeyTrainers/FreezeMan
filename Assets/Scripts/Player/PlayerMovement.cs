@@ -31,45 +31,72 @@ public class PlayMovement : MonoBehaviour
     private float jumpBufferTimeCounter;
     
     //freeze 
-    private GameObject[] Players;
     private Transform SpawnPosition;
     public bool isFrozen = false;
     public float lastMove = 0;
     private GameObject magazineObject;
+    private gameMode globalGameMode;
     void Awake()
     {
         CustomInput = new InputControls();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         SpawnPosition = GameObject.Find("SpawnPoint").transform;
+        globalGameMode = FindObjectOfType<gameMode>();
+
     }
 
     private void Start()
     {
-        Players = Resources.LoadAll<GameObject>("Players");
         magazineObject = GameObject.Find("gMagazineShapes");
-
+        
     }
 
     private void OnEnable()
     {
-        CustomInput.Enable();
-        CustomInput.Player.Move.performed += Move;    
-        CustomInput.Player.Move.canceled += StopMove;
-        CustomInput.Player.Freeze.performed += Freeze;
-        CustomInput.Player.Jump.performed += JumpButtonPressed;
-        CustomInput.Player.Jump.canceled += StopJumping;
+        if (enabled && gameObject)
+        {
+            CustomInput.Enable();
+            CustomInput.Player.Move.performed += Move;    
+            CustomInput.Player.Move.canceled += StopMove;
+            CustomInput.Player.Freeze.performed += Freeze;
+            CustomInput.Player.Jump.performed += JumpButtonPressed;
+            CustomInput.Player.Jump.canceled += StopJumping;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        CustomInput.Disable();
+        CustomInput.Player.Move.performed -= Move;    
+        CustomInput.Player.Move.canceled -= StopMove;
+        CustomInput.Player.Freeze.performed -= Freeze;
+        CustomInput.Player.Jump.performed -= JumpButtonPressed;
+        CustomInput.Player.Jump.canceled -= StopJumping;
     }
 
     private void Freeze(InputAction.CallbackContext obj)
     {
+        SpriteSwitcher spriteSwitcher = GetComponent<SpriteSwitcher>();
+        if (spriteSwitcher != null)
+        {
+            spriteSwitcher.isFrozen = true;
+        }
+
+        isFrozen = true;
+        globalGameMode.FreezeCounter++;
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         int newLayer = LayerMask.NameToLayer("Ground");
         gameObject.layer = newLayer;
-        gameObject.transform.Find("Collider").gameObject.layer = newLayer;
-        isFrozen = true;
+        GameObject colliderObject = gameObject.transform.Find("Collider")?.gameObject;
+        if (colliderObject != null)
+        {
+            colliderObject.layer = newLayer;
+        }
+
+        CustomInput.Disable();
         MagazineOfShapes magazineScript = magazineObject.GetComponent<MagazineOfShapes>();
         Instantiate(magazineScript.resetUI(), SpawnPosition.position, Quaternion.identity);
-        CustomInput.Disable();
+    
     }
 
     private void StopMove(InputAction.CallbackContext obj)
