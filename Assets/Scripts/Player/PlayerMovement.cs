@@ -38,7 +38,8 @@ public class PlayMovement : MonoBehaviour
     private GameObject magazineObject;
     private gameMode globalGameMode;
     private CinemachineVirtualCamera VCam;
-
+    private AudioClip[] FreezeSounds;
+    private AudioSource audioSource;
     void Awake()
     {
         CustomInput = new InputControls();
@@ -47,6 +48,8 @@ public class PlayMovement : MonoBehaviour
         globalGameMode = FindObjectOfType<gameMode>();
         VCam = GameObject.Find("VCam").GetComponent<CinemachineVirtualCamera>();
         VCam.Follow = gameObject.transform;
+        FreezeSounds = Resources.LoadAll<AudioClip>("Sounds");
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -87,6 +90,9 @@ public class PlayMovement : MonoBehaviour
         }
 
         gameObject.tag = "FrozenPlayer";
+        int soundIndex = Random.Range(0, FreezeSounds.Length - 1);
+        Debug.Log(FreezeSounds[soundIndex].name);
+        audioSource.PlayOneShot(FreezeSounds[soundIndex]);
         isFrozen = true;
         globalGameMode.FreezeCounter++;
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -101,6 +107,7 @@ public class PlayMovement : MonoBehaviour
         CustomInput.Disable();
         MagazineOfShapes magazineScript = magazineObject.GetComponent<MagazineOfShapes>();
         Instantiate(magazineScript.resetUI(), SpawnPosition.position, Quaternion.identity);
+        
     }
 
     private void StopMove(InputAction.CallbackContext obj)

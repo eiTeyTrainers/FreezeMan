@@ -14,8 +14,13 @@ public class Teleport : MonoBehaviour
     private SpriteRenderer _spriterenderer;
     public float amp;
 
+    private AudioSource _audioSource;
+    public AudioClip TeleportSound;
+    // private float alpahColor = 255;
+
     void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         transform.Find("E").gameObject.SetActive(false);
     }
 
@@ -26,7 +31,7 @@ public class Teleport : MonoBehaviour
             _playerMovement = other.GetComponent<PlayMovement>();
             _playerTransform = _playerMovement.transform;
             transform.Find("E").gameObject.SetActive(true);
-
+    
             _spriterenderer = other.GetComponent<SpriteRenderer>();
             if (_playerMovement.CustomInput.Player.Teleport.IsPressed())
             {
@@ -73,6 +78,7 @@ public class Teleport : MonoBehaviour
 
     private IEnumerator PortalIn()
     {
+        _audioSource.PlayOneShot(TeleportSound);
         TeleportIn = true;
         _playerMovement.CustomInput.Disable();
 
