@@ -54,9 +54,9 @@ public class PlayMovement : MonoBehaviour
         int newLayer = LayerMask.NameToLayer("Ground");
         gameObject.layer = newLayer;
         gameObject.transform.Find("Collider").gameObject.layer = newLayer;
-
-        GameObject player = Players[Random.Range(0, Players.Length)];
-        Instantiate(player, SpawnPosition.position, Quaternion.identity);
+        GameObject magazineObject = GameObject.Find("gMagazineShapes");
+        MagazineOfShapes magazineScript = magazineObject.GetComponent<MagazineOfShapes>();
+        Instantiate(magazineScript.resetUI(), SpawnPosition.position, Quaternion.identity);
         CustomInput.Disable();
         
     }
@@ -103,7 +103,7 @@ public class PlayMovement : MonoBehaviour
     {
         if(isGrounded)
         {
-            _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
+            _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Force); 
 
             isJumping = true;
             jumpTime = jumpStartTime;
@@ -111,13 +111,14 @@ public class PlayMovement : MonoBehaviour
         }
     
     }
+    
     private void StopJumping(InputAction.CallbackContext obj)
     {
         isJumping = false;
     }
 
     private void OnCollisionExit2D(Collision2D other)
-    {   
+    {
         if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = false;
