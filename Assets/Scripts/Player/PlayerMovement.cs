@@ -44,8 +44,13 @@ public class PlayMovement : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
         SpawnPosition = GameObject.Find("SpawnPoint").transform;
         globalGameMode = FindObjectOfType<gameMode>();
-        VCam =  GameObject.Find("VCam").GetComponent<CinemachineVirtualCamera>();
-        VCam.Follow = gameObject.transform;
+        GameObject VCamComponent = GameObject.Find("VCam");
+
+        if (VCamComponent)
+        {
+            VCam = VCamComponent.GetComponent<CinemachineVirtualCamera>();
+            VCam.Follow = gameObject.transform;
+        }
     }
 
     private void Start()
