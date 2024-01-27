@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -36,13 +37,15 @@ public class PlayMovement : MonoBehaviour
     public float lastMove = 0;
     private GameObject magazineObject;
     private gameMode globalGameMode;
+    private CinemachineVirtualCamera VCam;
     void Awake()
     {
         CustomInput = new InputControls();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         SpawnPosition = GameObject.Find("SpawnPoint").transform;
         globalGameMode = FindObjectOfType<gameMode>();
-
+        VCam =  GameObject.Find("VCam").GetComponent<CinemachineVirtualCamera>();
+        VCam.Follow = gameObject.transform;
     }
 
     private void Start()
