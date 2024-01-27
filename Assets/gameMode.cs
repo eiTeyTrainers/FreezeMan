@@ -5,7 +5,7 @@ using UnityEngine;
 public class gameMode : MonoBehaviour
 {
     public event Action<float> FreezeCounterChanged; // Event to notify changes in freezeCounter
-    public  int _freezeCounter = 0;
+    public  int _freezeCounter;
     public float time;
     public bool stopTimer;
     public List<MagazineOfShapes.Shapes> shapes;
@@ -22,7 +22,6 @@ public class gameMode : MonoBehaviour
         {
             time += Time.deltaTime;
         }
-
     }
 
     public int FreezeCounter

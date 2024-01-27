@@ -8,7 +8,7 @@ public class NextScene : MonoBehaviour
 {
     public Animator animator;
     private static readonly int FadeOut = Animator.StringToHash("FadeOut");
-
+    
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);

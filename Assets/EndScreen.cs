@@ -26,51 +26,50 @@ public class EndScreen : MonoBehaviour
         float seconds = Mathf.FloorToInt(gameMode.time % 60);
         float milliseconds = Mathf.FloorToInt((gameMode.time * 1000) % 1000);
         UpdateTimeText(minutes, seconds, milliseconds);
-        
-        GameObject canvasObject = GameObject.Find("Canvas");
 
-        KillCountText = GameObject.Find("KillCount").GetComponent<TextMeshProUGUI>();
-        float killCount = gameMode._freezeCounter;
-        string timeString = string.Format("you won but look what you lost {0:00}", killCount);
-
-        KillCountText.text = timeString;
-        Vector3 position = new Vector3(0,0,0);
-        Debug.Log(gameMode.shapes.Count);
-        for (int i = 0; i< gameMode.shapes.Count; i++)
+        if (Camera.main != null)
         {
-            
-            GameObject currentShape;
-            switch (gameMode.shapes[i])
+            Vector2 screenPosition = Camera.main.transform.position;
+            KillCountText = GameObject.Find("KillCount").GetComponent<TextMeshProUGUI>();
+            float killCount = gameMode._freezeCounter +1;
+            string timeString = string.Format("you won but look what you lost {0:00}", killCount);
+
+            Vector3 position = new Vector3(screenPosition.x + NextShapeOffset, -150, 0);
+            KillCountText.text = timeString;
+            for (int i = 0; i< gameMode.shapes.Count; i++)
             {
-                case MagazineOfShapes.Shapes.Circle:
-                    currentShape = Instantiate(frozenCircle, position, Quaternion.identity);
-                    break;
-                case MagazineOfShapes.Shapes.Triangle:
-                    currentShape = Instantiate(frozenTriangle, position, Quaternion.identity);
-                    break;
-                case MagazineOfShapes.Shapes.Box:
-                    currentShape = Instantiate(frozenBox, position, Quaternion.identity);
-                    break;
-                case MagazineOfShapes.Shapes.Oval:
-                    currentShape = Instantiate(frozenOval, position, Quaternion.identity);
-                    break;
-                case MagazineOfShapes.Shapes.Rectangle:
-                    currentShape = Instantiate(frozenRectangle, position, Quaternion.identity);
-                    break;
-                case MagazineOfShapes.Shapes.TrianglePortal:
-                    currentShape = Instantiate(frozenTrianglePortal, position, Quaternion.identity);
-                    break;
-                default:
-                    currentShape = null;
-                    break;
-            }
-            if (currentShape != null)
-            {
-                currentShape.transform.SetParent(canvasObject.transform, false);
-                currentShape.transform.localScale = new Vector3(1f, 1f, 1f);
-            }
-            NextShapeOffset += 60;
+                GameObject currentShape;
+                switch (gameMode.shapes[i])
+                {
+                    case MagazineOfShapes.Shapes.Circle:
+                        currentShape = Instantiate(frozenCircle, position, Quaternion.identity);
+                        break;
+                    case MagazineOfShapes.Shapes.Triangle:
+                        currentShape = Instantiate(frozenTriangle, position, Quaternion.identity);
+                        break;
+                    case MagazineOfShapes.Shapes.Box:
+                        currentShape = Instantiate(frozenBox, position, Quaternion.identity);
+                        break;
+                    case MagazineOfShapes.Shapes.Oval:
+                        currentShape = Instantiate(frozenOval, position, Quaternion.identity);
+                        break;
+                    case MagazineOfShapes.Shapes.Rectangle:
+                        currentShape = Instantiate(frozenRectangle, position, Quaternion.identity);
+                        break;
+                    case MagazineOfShapes.Shapes.TrianglePortal:
+                        currentShape = Instantiate(frozenTrianglePortal, position, Quaternion.identity);
+                        break;
+                    default:
+                        currentShape = null;
+                        break;
+                }
+                if (currentShape != null)
+                {
+                    currentShape.transform.SetParent(gameObject.transform, false);
+                }
+                NextShapeOffset += 60;
             
+            }
         }
     }
     
