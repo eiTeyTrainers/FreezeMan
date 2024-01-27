@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class PlayMovement : MonoBehaviour
 {
     public InputControls CustomInput = null;
-    private float _moveVector;
+    [SerializeField] public float moveVector;
     public float Speed = 5f;
     private Rigidbody2D _rigidbody2D;
     public float torqueFactor = -0.5f;
@@ -72,7 +73,7 @@ public class PlayMovement : MonoBehaviour
 
     private void StopMove(InputAction.CallbackContext obj)
     {
-        _moveVector = 0;
+        moveVector = 0;
     }
 
     private void OnDisable()
@@ -82,7 +83,7 @@ public class PlayMovement : MonoBehaviour
 
     private void Move(InputAction.CallbackContext callbackContext)
     {
-        _moveVector = callbackContext.ReadValue<float>();
+        moveVector = callbackContext.ReadValue<float>();
         lastMove = callbackContext.ReadValue<float>();
     }
 
@@ -123,7 +124,7 @@ public class PlayMovement : MonoBehaviour
     private void FixedUpdate()
     {
         float oldY = _rigidbody2D.velocity.y;
-        float x = _moveVector * Speed;
+        float x = moveVector * Speed;
         if (!isGrounded)
         {
             _rigidbody2D.totalTorque = x * torqueFactor;
