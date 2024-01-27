@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class MagazineOfShapes : MonoBehaviour
 {
-    public GameObject canvasObject;
+    private GameObject canvasObject;
     public enum Shapes
     { 
         Circle,
         Triangle,
         Box,
         Oval,
+        Rectangle,
         TrianglePortal,
     }
     public Shapes[] shapes;
@@ -25,13 +26,16 @@ public class MagazineOfShapes : MonoBehaviour
     [SerializeField] private GameObject boxPrefab;
     [SerializeField] private GameObject playerBoxPrefab;
     [SerializeField] private GameObject ovalPrefab;
-    [SerializeField] private GameObject playerOvalPrefab;
+    [SerializeField] private GameObject playerOvalPrefab;   
+    [SerializeField] private GameObject rectanglePrefab;
+    [SerializeField] private GameObject playerRectanglePrefab;
     [SerializeField] private GameObject trianglePortalPrefab;
     [SerializeField] private GameObject playerTrianglePortalPrefab;
     private List<GameObject> PlayershapeGameObjects;
     private GameObject _playerStart;
     private void Awake()
     {
+        canvasObject =  GameObject.Find("MagCanvas");
         shapeGameObjects = new List<GameObject>(); 
         PlayershapeGameObjects = new List<GameObject>();
         
@@ -40,7 +44,7 @@ public class MagazineOfShapes : MonoBehaviour
         GameObject firstBrackets = Instantiate(bracketPrefab, position, Quaternion.identity);
         firstBrackets.transform.SetParent(canvasObject.transform, false);
         firstBrackets.transform.localScale = new Vector3(1f,1f,1f);
-        NextShapeOffset += 60;
+        NextShapeOffset += 100;
         
         for (int i = 0; i < shapes.Length; i++)
         {
@@ -64,6 +68,10 @@ public class MagazineOfShapes : MonoBehaviour
                 case Shapes.Oval:
                     currentShape = Instantiate(ovalPrefab, position, Quaternion.identity);
                     PlayershapeGameObjects.Add(playerOvalPrefab);
+                    break;           
+                case Shapes.Rectangle:
+                    currentShape = Instantiate(rectanglePrefab, position, Quaternion.identity);
+                    PlayershapeGameObjects.Add(playerRectanglePrefab);
                     break;
                 case Shapes.TrianglePortal:
                     currentShape = Instantiate(trianglePortalPrefab, position, Quaternion.identity);
@@ -81,6 +89,8 @@ public class MagazineOfShapes : MonoBehaviour
             }
              NextShapeOffset += 60;
         }
+
+        NextShapeOffset += 40;
         position = new Vector3(screenPosition.x + NextShapeOffset, -150, 0);
         GameObject SecondBrackets = Instantiate(bracketPrefab, position, Quaternion.Euler(0, 0, 180f));
         SecondBrackets.transform.SetParent(canvasObject.transform, false);
