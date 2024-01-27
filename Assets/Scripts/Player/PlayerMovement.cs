@@ -15,7 +15,7 @@ public class PlayMovement : MonoBehaviour
     public float Speed = 5f;
     private Rigidbody2D _rigidbody2D;
     public float torqueFactor = -0.5f;
-    
+
     //Jump
     public float jumpForce;
     public LayerMask whatIsGround;
@@ -30,7 +30,7 @@ public class PlayMovement : MonoBehaviour
 
     private const float jumpBufferTime = 0.2f;
     private float jumpBufferTimeCounter;
-    
+
     //freeze 
     private Transform SpawnPosition;
     public bool isFrozen = false;
@@ -38,20 +38,20 @@ public class PlayMovement : MonoBehaviour
     private GameObject magazineObject;
     private gameMode globalGameMode;
     private CinemachineVirtualCamera VCam;
+
     void Awake()
     {
         CustomInput = new InputControls();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         SpawnPosition = GameObject.Find("SpawnPoint").transform;
         globalGameMode = FindObjectOfType<gameMode>();
-        VCam =  GameObject.Find("VCam").GetComponent<CinemachineVirtualCamera>();
+        VCam = GameObject.Find("VCam").GetComponent<CinemachineVirtualCamera>();
         VCam.Follow = gameObject.transform;
     }
 
     private void Start()
     {
         magazineObject = GameObject.Find("gMagazineShapes");
-        
     }
 
     private void OnEnable()
@@ -59,7 +59,7 @@ public class PlayMovement : MonoBehaviour
         if (enabled && gameObject)
         {
             CustomInput.Enable();
-            CustomInput.Player.Move.performed += Move;    
+            CustomInput.Player.Move.performed += Move;
             CustomInput.Player.Move.canceled += StopMove;
             CustomInput.Player.Freeze.performed += Freeze;
             CustomInput.Player.Jump.performed += JumpButtonPressed;
@@ -67,15 +67,16 @@ public class PlayMovement : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         CustomInput.Disable();
-        CustomInput.Player.Move.performed -= Move;    
+        CustomInput.Player.Move.performed -= Move;
         CustomInput.Player.Move.canceled -= StopMove;
         CustomInput.Player.Freeze.performed -= Freeze;
         CustomInput.Player.Jump.performed -= JumpButtonPressed;
         CustomInput.Player.Jump.canceled -= StopJumping;
     }
+
 
     private void Freeze(InputAction.CallbackContext obj)
     {
@@ -99,7 +100,6 @@ public class PlayMovement : MonoBehaviour
         CustomInput.Disable();
         MagazineOfShapes magazineScript = magazineObject.GetComponent<MagazineOfShapes>();
         Instantiate(magazineScript.resetUI(), SpawnPosition.position, Quaternion.identity);
-    
     }
 
     private void StopMove(InputAction.CallbackContext obj)
@@ -107,10 +107,6 @@ public class PlayMovement : MonoBehaviour
         moveVector = 0;
     }
 
-    private void OnDisable()
-    {
-        CustomInput.Player.Move.performed -= Move;
-    }
 
     private void Move(InputAction.CallbackContext callbackContext)
     {
@@ -134,7 +130,7 @@ public class PlayMovement : MonoBehaviour
                 isJumping = false;
             }
         }
-        
+
         if (isGrounded)
         {
             coyoteTimeCounter = coyoteTime;
@@ -143,9 +139,9 @@ public class PlayMovement : MonoBehaviour
         {
             coyoteTimeCounter -= Time.deltaTime;
         }
-        
+
         jumpBufferTimeCounter -= Time.deltaTime;
-        
+
         if (coyoteTimeCounter > 0f && jumpBufferTimeCounter > 0f)
         {
             Jump();
@@ -160,6 +156,7 @@ public class PlayMovement : MonoBehaviour
         {
             _rigidbody2D.totalTorque = x * torqueFactor;
         }
+
         _rigidbody2D.velocity = new Vector2(x, oldY);
     }
 
@@ -167,11 +164,12 @@ public class PlayMovement : MonoBehaviour
     {
         jumpBufferTimeCounter = jumpBufferTime;
     }
-    
+
     private void Jump()
     {
-        Debug.Log("isGrounded: " + isGrounded + " coyote timer: " + coyoteTimeCounter + " jumpbuffer timer " + jumpBufferTimeCounter);
-        _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse); 
+        Debug.Log("isGrounded: " + isGrounded + " coyote timer: " + coyoteTimeCounter + " jumpbuffer timer " +
+                  jumpBufferTimeCounter);
+        _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
 
         isJumping = true;
         jumpTime = jumpStartTime;
@@ -179,8 +177,8 @@ public class PlayMovement : MonoBehaviour
 
         coyoteTimeCounter = 0f;
         jumpBufferTimeCounter = 0f;
-    
     }
+
     private void StopJumping(InputAction.CallbackContext obj)
     {
         isJumping = false;
@@ -197,15 +195,15 @@ public class PlayMovement : MonoBehaviour
 
         return rightAngle > 30;
     }
-    
+
     private void OnCollisionExit2D(Collision2D other)
-    {   
+    {
         isGrounded = false;
     }
-    
+
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if(IsCollisionGround(other))
+        if (IsCollisionGround(other))
         {
             isGrounded = true;
         }

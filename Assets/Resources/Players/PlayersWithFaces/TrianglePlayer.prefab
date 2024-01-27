@@ -166,7 +166,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: -656535467, guid: 5f57934f2ed498f47a23f6008e4483a9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -225,6 +225,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   jumpStartTime: 0.2
+  jumpTime: 0
+  isJumping: 0
   isFrozen: 0
   lastMove: 0
 --- !u!60 &9046247891575732425
@@ -309,7 +311,6 @@ MonoBehaviour:
   - {fileID: 1550888807, guid: 5f57934f2ed498f47a23f6008e4483a9, type: 3}
   - {fileID: 1220956330, guid: 5f57934f2ed498f47a23f6008e4483a9, type: 3}
   - {fileID: 1662322978, guid: 5f57934f2ed498f47a23f6008e4483a9, type: 3}
-  forChangeFreezeAmount: 5
   isFrozen: 0
   FrozenSprite: {fileID: -1284691135, guid: 5f57934f2ed498f47a23f6008e4483a9, type: 3}
   WonSprite: {fileID: -426880770, guid: 5f57934f2ed498f47a23f6008e4483a9, type: 3}

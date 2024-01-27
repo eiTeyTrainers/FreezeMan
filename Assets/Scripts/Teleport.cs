@@ -6,19 +6,16 @@ using UnityEngine;
 public class Teleport : MonoBehaviour
 {
     // Start is called before the first frame update
-    private GameObject Player;
     public Transform destination;
     private bool TeleportIn = false;
     private bool Teleportout = false;
     private PlayMovement _playerMovement;
+    private Transform _playerTransform;
     private SpriteRenderer _spriterenderer;
     public float amp;
-    // private float alpahColor = 255;
 
     void Awake()
     {
-        Player = GameObject.FindGameObjectWithTag("Player");
-        _playerMovement = Player.GetComponent<PlayMovement>();
         transform.Find("E").gameObject.SetActive(false);
     }
 
@@ -26,11 +23,14 @@ public class Teleport : MonoBehaviour
     {
         if (other.CompareTag("Player") && destination != null)
         {
+            _playerMovement = other.GetComponent<PlayMovement>();
+            _playerTransform = _playerMovement.transform;
             transform.Find("E").gameObject.SetActive(true);
 
             _spriterenderer = other.GetComponent<SpriteRenderer>();
             if (_playerMovement.CustomInput.Player.Teleport.IsPressed())
             {
+                Debug.Log(_playerMovement.CustomInput);
                 StartCoroutine(PortalIn());
             }
         }
@@ -77,7 +77,7 @@ public class Teleport : MonoBehaviour
         _playerMovement.CustomInput.Disable();
 
         yield return new WaitForSeconds(0.5f);
-        Player.transform.position = destination.transform.position;
+        _playerTransform.position = destination.transform.position;
         Teleportout = true;
         TeleportIn = false;
         yield return new WaitForSeconds(0.5f);
