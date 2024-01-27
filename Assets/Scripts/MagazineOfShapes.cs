@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class MagazineOfShapes : MonoBehaviour
 {
-    public GameObject canvasObject;
+    private GameObject canvasObject;
     public enum Shapes
     { 
         Circle,
         Triangle,
         Box,
         Oval,
+        Rectangle,
         TrianglePortal,
     }
     public Shapes[] shapes;
@@ -25,22 +26,25 @@ public class MagazineOfShapes : MonoBehaviour
     [SerializeField] private GameObject boxPrefab;
     [SerializeField] private GameObject playerBoxPrefab;
     [SerializeField] private GameObject ovalPrefab;
-    [SerializeField] private GameObject playerOvalPrefab;
+    [SerializeField] private GameObject playerOvalPrefab;   
+    [SerializeField] private GameObject rectanglePrefab;
+    [SerializeField] private GameObject playerRectanglePrefab;
     [SerializeField] private GameObject trianglePortalPrefab;
     [SerializeField] private GameObject playerTrianglePortalPrefab;
     private List<GameObject> PlayershapeGameObjects;
     private GameObject _playerStart;
+    private int sortlayer;  
     private void Awake()
     {
+        canvasObject =  GameObject.Find("MagCanvas");
         shapeGameObjects = new List<GameObject>(); 
         PlayershapeGameObjects = new List<GameObject>();
-        
         Vector2 screenPosition = Camera.main.transform.position;
         Vector3 position = new Vector3(screenPosition.x + NextShapeOffset, -150, 0);
         GameObject firstBrackets = Instantiate(bracketPrefab, position, Quaternion.identity);
         firstBrackets.transform.SetParent(canvasObject.transform, false);
         firstBrackets.transform.localScale = new Vector3(1f,1f,1f);
-        NextShapeOffset += 60;
+        NextShapeOffset += 120;
         
         for (int i = 0; i < shapes.Length; i++)
         {
@@ -64,6 +68,10 @@ public class MagazineOfShapes : MonoBehaviour
                 case Shapes.Oval:
                     currentShape = Instantiate(ovalPrefab, position, Quaternion.identity);
                     PlayershapeGameObjects.Add(playerOvalPrefab);
+                    break;           
+                case Shapes.Rectangle:
+                    currentShape = Instantiate(rectanglePrefab, position, Quaternion.identity);
+                    PlayershapeGameObjects.Add(playerRectanglePrefab);
                     break;
                 case Shapes.TrianglePortal:
                     currentShape = Instantiate(trianglePortalPrefab, position, Quaternion.identity);
@@ -78,9 +86,14 @@ public class MagazineOfShapes : MonoBehaviour
                 currentShape.transform.SetParent(canvasObject.transform, false);
                 currentShape.transform.localScale = new Vector3(1f,1f,1f);
                 shapeGameObjects.Add(currentShape);
+                RectTransform shapeRectTransform = currentShape.GetComponent<RectTransform>();
+                shapeRectTransform.SetSiblingIndex(sortlayer);
             }
              NextShapeOffset += 60;
+            sortlayer += 1;
         }
+
+        NextShapeOffset += 40;
         position = new Vector3(screenPosition.x + NextShapeOffset, -150, 0);
         GameObject SecondBrackets = Instantiate(bracketPrefab, position, Quaternion.Euler(0, 0, 180f));
         SecondBrackets.transform.SetParent(canvasObject.transform, false);
@@ -102,9 +115,10 @@ public class MagazineOfShapes : MonoBehaviour
              PlayershapeGameObjects.RemoveAt(0);
              for (int i = 0; i < shapeGameObjects.Count; i++)
              {
+                 int firstShapeOffset = i == 0 ? 100 : 60;  
                  Transform shapeTransform = shapeGameObjects[i].transform;
                  Vector3 shapePosition = shapeTransform.position;
-                 shapeGameObjects[i].transform.SetPositionAndRotation(new Vector3(shapePosition.x - 60, shapePosition.y,shapePosition.z),shapeTransform.rotation); ;
+                 shapeGameObjects[i].transform.SetPositionAndRotation(new Vector3(shapePosition.x - firstShapeOffset, shapePosition.y,shapePosition.z),shapeTransform.rotation); ;
              }
              return toBeSpawnedShape;
          }
