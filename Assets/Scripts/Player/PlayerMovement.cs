@@ -40,14 +40,21 @@ public class PlayMovement : MonoBehaviour
     private CinemachineVirtualCamera VCam;
     private AudioClip[] FreezeSounds;
     private AudioSource audioSource;
+    
     void Awake()
     {
         CustomInput = new InputControls();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         SpawnPosition = GameObject.Find("SpawnPoint").transform;
         globalGameMode = FindObjectOfType<gameMode>();
-        VCam = GameObject.Find("VCam").GetComponent<CinemachineVirtualCamera>();
-        VCam.Follow = gameObject.transform;
+        GameObject VCamComponent = GameObject.Find("VCam");
+
+        if (VCamComponent)
+        {
+            VCam = VCamComponent.GetComponent<CinemachineVirtualCamera>();
+            VCam.Follow = gameObject.transform;
+        }
+        
         FreezeSounds = Resources.LoadAll<AudioClip>("Sounds");
         audioSource = GetComponent<AudioSource>();
     }
@@ -79,8 +86,7 @@ public class PlayMovement : MonoBehaviour
         CustomInput.Player.Jump.performed -= JumpButtonPressed;
         CustomInput.Player.Jump.canceled -= StopJumping;
     }
-
-
+    
     private void Freeze(InputAction.CallbackContext obj)
     {
         SpriteSwitcher spriteSwitcher = GetComponent<SpriteSwitcher>();
@@ -93,6 +99,7 @@ public class PlayMovement : MonoBehaviour
         int soundIndex = Random.Range(0, FreezeSounds.Length - 1);
         Debug.Log(FreezeSounds[soundIndex].name);
         audioSource.PlayOneShot(FreezeSounds[soundIndex]);
+        
         isFrozen = true;
         globalGameMode.FreezeCounter++;
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -107,7 +114,7 @@ public class PlayMovement : MonoBehaviour
         CustomInput.Disable();
         MagazineOfShapes magazineScript = magazineObject.GetComponent<MagazineOfShapes>();
         Instantiate(magazineScript.resetUI(), SpawnPosition.position, Quaternion.identity);
-        
+    
     }
 
     private void StopMove(InputAction.CallbackContext obj)
@@ -138,7 +145,7 @@ public class PlayMovement : MonoBehaviour
                 isJumping = false;
             }
         }
-
+        
         if (isGrounded)
         {
             coyoteTimeCounter = coyoteTime;
@@ -147,9 +154,9 @@ public class PlayMovement : MonoBehaviour
         {
             coyoteTimeCounter -= Time.deltaTime;
         }
-
+        
         jumpBufferTimeCounter -= Time.deltaTime;
-
+        
         if (coyoteTimeCounter > 0f && jumpBufferTimeCounter > 0f)
         {
             Jump();
@@ -172,7 +179,7 @@ public class PlayMovement : MonoBehaviour
     {
         jumpBufferTimeCounter = jumpBufferTime;
     }
-
+    
     private void Jump()
     {
         _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
@@ -201,12 +208,12 @@ public class PlayMovement : MonoBehaviour
 
         return rightAngle > 30;
     }
-
+    
     private void OnCollisionExit2D(Collision2D other)
-    {
+    {   
         isGrounded = false;
     }
-
+    
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (IsCollisionGround(other))
