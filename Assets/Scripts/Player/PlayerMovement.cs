@@ -17,8 +17,8 @@ public class PlayMovement : MonoBehaviour
     public float jumpForce;
     public LayerMask whatIsGround;
     [SerializeField] float jumpStartTime;
-    private float jumpTime;
-    private bool isJumping;
+    public float jumpTime;
+    public bool isJumping;
     private bool isGrounded = true;
 
     //freeze 
