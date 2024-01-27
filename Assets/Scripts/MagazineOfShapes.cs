@@ -33,18 +33,18 @@ public class MagazineOfShapes : MonoBehaviour
     [SerializeField] private GameObject playerTrianglePortalPrefab;
     private List<GameObject> PlayershapeGameObjects;
     private GameObject _playerStart;
+    private int sortlayer;  
     private void Awake()
     {
         canvasObject =  GameObject.Find("MagCanvas");
         shapeGameObjects = new List<GameObject>(); 
         PlayershapeGameObjects = new List<GameObject>();
-        
         Vector2 screenPosition = Camera.main.transform.position;
         Vector3 position = new Vector3(screenPosition.x + NextShapeOffset, -150, 0);
         GameObject firstBrackets = Instantiate(bracketPrefab, position, Quaternion.identity);
         firstBrackets.transform.SetParent(canvasObject.transform, false);
         firstBrackets.transform.localScale = new Vector3(1f,1f,1f);
-        NextShapeOffset += 100;
+        NextShapeOffset += 120;
         
         for (int i = 0; i < shapes.Length; i++)
         {
@@ -86,8 +86,11 @@ public class MagazineOfShapes : MonoBehaviour
                 currentShape.transform.SetParent(canvasObject.transform, false);
                 currentShape.transform.localScale = new Vector3(1f,1f,1f);
                 shapeGameObjects.Add(currentShape);
+                RectTransform shapeRectTransform = currentShape.GetComponent<RectTransform>();
+                shapeRectTransform.SetSiblingIndex(sortlayer);
             }
              NextShapeOffset += 60;
+            sortlayer += 1;
         }
 
         NextShapeOffset += 40;
@@ -112,9 +115,10 @@ public class MagazineOfShapes : MonoBehaviour
              PlayershapeGameObjects.RemoveAt(0);
              for (int i = 0; i < shapeGameObjects.Count; i++)
              {
+                 int firstShapeOffset = i == 0 ? 100 : 60;  
                  Transform shapeTransform = shapeGameObjects[i].transform;
                  Vector3 shapePosition = shapeTransform.position;
-                 shapeGameObjects[i].transform.SetPositionAndRotation(new Vector3(shapePosition.x - 60, shapePosition.y,shapePosition.z),shapeTransform.rotation); ;
+                 shapeGameObjects[i].transform.SetPositionAndRotation(new Vector3(shapePosition.x - firstShapeOffset, shapePosition.y,shapePosition.z),shapeTransform.rotation); ;
              }
              return toBeSpawnedShape;
          }
