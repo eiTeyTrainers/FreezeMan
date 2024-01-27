@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1444969808683422384}
   - component: {fileID: 2953857733289375844}
-  - component: {fileID: 3834532775619789818}
+  - component: {fileID: 4780870336935596778}
   m_Layer: 0
   m_Name: Trampoline
   m_TagString: Untagged
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4134729903940004749}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.14, z: -0.003109794}
+  m_LocalPosition: {x: 0, y: -0.1594, z: -0.003109794}
   m_LocalScale: {x: 1.0869565, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -62,7 +62,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.0021367893, y: 0.007621728}
@@ -78,7 +78,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.33578938, y: 0.023596738}
   m_EdgeRadius: 0
---- !u!114 &3834532775619789818
+--- !u!114 &4780870336935596778
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,11 +87,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4134729903940004749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01281a1e5dcbb464184c22e71ebcb41f, type: 3}
+  m_Script: {fileID: 11500000, guid: 31b57672fb1daa34aa3f076fd6a5fc49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnTrigge_material: {fileID: 6200000, guid: 44bd731840c9eee479db17a030585c8c, type: 2}
-  OnTriggerExit_material: {fileID: 0}
 --- !u!1 &5951401416155410685
 GameObject:
   m_ObjectHideFlags: 0

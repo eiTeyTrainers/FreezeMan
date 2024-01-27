@@ -86,6 +86,7 @@ public class PlayMovement : MonoBehaviour
             spriteSwitcher.isFrozen = true;
         }
 
+        gameObject.tag = "FrozenPlayer";
         isFrozen = true;
         globalGameMode.FreezeCounter++;
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -167,8 +168,6 @@ public class PlayMovement : MonoBehaviour
 
     private void Jump()
     {
-        Debug.Log("isGrounded: " + isGrounded + " coyote timer: " + coyoteTimeCounter + " jumpbuffer timer " +
-                  jumpBufferTimeCounter);
         _rigidbody2D.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
 
         isJumping = true;
