@@ -19,7 +19,7 @@ public class Trampoline : MonoBehaviour
         if (_playerRb2)
         {
             Debug.Log(_lastVelocity);
-            _lastVelocity = _playerRb2.velocity;
+            _lastVelocity = new Vector3(_playerMovement.lastMove, _playerRb2.velocity.y, 0f);
         }
     }
 
@@ -36,10 +36,5 @@ public class Trampoline : MonoBehaviour
             var direction = Vector3.Reflect(_lastVelocity.normalized, other.contacts[0].normal);
             _playerRb2.velocity = direction * Mathf.Max(speed, 20f);
         }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        throw new NotImplementedException();
     }
 }
