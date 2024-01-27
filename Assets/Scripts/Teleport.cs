@@ -12,6 +12,7 @@ public class Teleport : MonoBehaviour
     private bool Teleportout = false;
     private PlayMovement _playerMovement;
     private SpriteRenderer _spriterenderer;
+    public float amp;
     // private float alpahColor = 255;
 
     void Awake()
@@ -38,6 +39,15 @@ public class Teleport : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         transform.Find("E").gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (transform.Find("E").gameObject.activeSelf)
+        {
+            transform.Find("E").gameObject.transform.position =
+                new Vector2(gameObject.transform.position.x, Mathf.Sin(Time.time) * amp);
+        }
     }
 
     void FixedUpdate()
