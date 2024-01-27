@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -40,6 +41,7 @@ public class PlayMovement : MonoBehaviour
     private CinemachineVirtualCamera VCam;
     private AudioClip[] FreezeSounds;
     private AudioSource audioSource;
+    public UnityEvent onFreeze;
     
     void Awake()
     {
@@ -95,6 +97,7 @@ public class PlayMovement : MonoBehaviour
             spriteSwitcher.isFrozen = true;
         }
 
+        onFreeze.Invoke();
         gameObject.tag = "FrozenPlayer";
         int soundIndex = Random.Range(0, FreezeSounds.Length - 1);
         Debug.Log(FreezeSounds[soundIndex].name);

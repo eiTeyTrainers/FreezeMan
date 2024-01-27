@@ -65,7 +65,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0021367893, y: 0.007621728}
+  m_Offset: {x: 0.0010202229, y: -0.010800786}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.33578938, y: 0.023596738}
+  m_Size: {x: 0.3692848, y: 0.06044177}
   m_EdgeRadius: 0
 --- !u!114 &4780870336935596778
 MonoBehaviour:
@@ -286,7 +286,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 4
-  m_Material: {fileID: 6200000, guid: f2e5f938a78777d478279ec3794fe236, type: 2}
+  m_Material: {fileID: 6200000, guid: 1cd65d1931b50dd4c9191f4777edf0a9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -321,6 +321,21 @@ MonoBehaviour:
   isJumping: 0
   isFrozen: 0
   lastMove: 0
+  onFreeze:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4780870336935596778}
+        m_TargetAssemblyTypeName: Trampoline, Assembly-CSharp
+        m_MethodName: EnableTrampolineCollision
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6215310185886593296
 MonoBehaviour:
   m_ObjectHideFlags: 0
