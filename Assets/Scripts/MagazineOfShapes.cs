@@ -44,7 +44,7 @@ public class MagazineOfShapes : MonoBehaviour
         GameObject firstBrackets = Instantiate(bracketPrefab, position, Quaternion.identity);
         firstBrackets.transform.SetParent(canvasObject.transform, false);
         firstBrackets.transform.localScale = new Vector3(1f,1f,1f);
-        NextShapeOffset += 60;
+        NextShapeOffset += 100;
         
         for (int i = 0; i < shapes.Length; i++)
         {
@@ -89,6 +89,8 @@ public class MagazineOfShapes : MonoBehaviour
             }
              NextShapeOffset += 60;
         }
+
+        NextShapeOffset += 40;
         position = new Vector3(screenPosition.x + NextShapeOffset, -150, 0);
         GameObject SecondBrackets = Instantiate(bracketPrefab, position, Quaternion.Euler(0, 0, 180f));
         SecondBrackets.transform.SetParent(canvasObject.transform, false);
