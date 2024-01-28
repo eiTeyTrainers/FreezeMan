@@ -14,6 +14,8 @@ public class EndScreen : MonoBehaviour
     public GameObject frozenRectangle;
     public GameObject frozenTrianglePortal;
     private float nextShapeOffset;
+    private int shapesPerLine = 16; // Number of shapes per line
+    private float lineOffset = 0.0f;
 
     void Awake()
     {
@@ -25,13 +27,15 @@ public class EndScreen : MonoBehaviour
         float seconds = Mathf.FloorToInt(gameMode.time % 60);
         float milliseconds = Mathf.FloorToInt((gameMode.time * 1000) % 1000);
         UpdateTimeText(minutes, seconds, milliseconds);
+        Vector2 screenSize = new Vector2(Screen.width, Screen.height);
 
-        Vector2 screenPosition = transform.position;
         killCountText = GameObject.Find("KillCount").GetComponent<TextMeshProUGUI>();
+        Vector3 shapeSpawnPoint = GameObject.Find("ShapeSpawnPoint").GetComponent<RectTransform>().pivot;
         float killCount = gameMode._freezeCounter + 1;
         string timeString = string.Format("You won, but look what you lost: {0:00}", killCount);
+        Vector3 initialPosition = new Vector3(0, 0, 0); // Adjust the initial position as needed
+        Vector3 position = initialPosition;
 
-        Vector3 position = new Vector3(screenPosition.x + nextShapeOffset, -150, 0);
         killCountText.text = timeString;
 
         for (int i = 0; i < gameMode.shapes.Count; i++)
@@ -61,11 +65,23 @@ public class EndScreen : MonoBehaviour
                     currentShape = null;
                     break;
             }
+
             if (currentShape != null)
             {
-                currentShape.transform.SetParent(transform, false);
+                currentShape.transform.SetParent(GameObject.Find("Viewport").transform, false);
+
+                // Adjust the pivot along the x-axis
+                RectTransform rectTransform = currentShape.GetComponent<RectTransform>();
+                Vector2 newPivot = new Vector2(-1.74f + nextShapeOffset, 1.3f - lineOffset); // Adjust the x-axis and y-axis values as needed
+                rectTransform.pivot = newPivot;
+                nextShapeOffset -= screenSize.x * 0.002f;
+
+                if ((i + 1) % shapesPerLine == 0)
+                {
+                    lineOffset -= screenSize.y * 0.003f; // Increase Y offset for a new line
+                    nextShapeOffset = 0.0f; // Reset X offset for the next line
+                }
             }
-            position.x += 100; // Increase X position for the next shape
         }
     }
 
