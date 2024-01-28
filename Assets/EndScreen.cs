@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class EndScreen : MonoBehaviour
 {
-    private TextMeshProUGUI timeText; 
-    private TextMeshProUGUI KillCountText; 
+    private TextMeshProUGUI timeText;
+    private TextMeshProUGUI killCountText;
     private gameMode gameMode;
     public GameObject frozenCircle;
     public GameObject frozenTriangle;
@@ -14,27 +13,28 @@ public class EndScreen : MonoBehaviour
     public GameObject frozenOval;
     public GameObject frozenRectangle;
     public GameObject frozenTrianglePortal;
-    private float NextShapeOffset;
+    private float nextShapeOffset;
 
     void Awake()
     {
         gameMode = FindObjectOfType<gameMode>();
         gameMode.stopTimer = true;
         timeText = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
-        
+
         float minutes = Mathf.FloorToInt(gameMode.time / 60);
         float seconds = Mathf.FloorToInt(gameMode.time % 60);
         float milliseconds = Mathf.FloorToInt((gameMode.time * 1000) % 1000);
         UpdateTimeText(minutes, seconds, milliseconds);
-        
-        Vector2 screenPosition = GameObject.Find("ShapeSpawnPoint").transform.position;
-        KillCountText = GameObject.Find("KillCount").GetComponent<TextMeshProUGUI>();
-        float killCount = gameMode._freezeCounter +1;
-        string timeString = string.Format("you won but look what you lost {0:00}", killCount);
 
-        Vector3 position = new Vector3(screenPosition.x + NextShapeOffset, -150, 0);
-        KillCountText.text = timeString;
-        for (int i = 0; i< gameMode.shapes.Count; i++)
+        Vector2 screenPosition = transform.position;
+        killCountText = GameObject.Find("KillCount").GetComponent<TextMeshProUGUI>();
+        float killCount = gameMode._freezeCounter + 1;
+        string timeString = string.Format("You won, but look what you lost: {0:00}", killCount);
+
+        Vector3 position = new Vector3(screenPosition.x + nextShapeOffset, -150, 0);
+        killCountText.text = timeString;
+
+        for (int i = 0; i < gameMode.shapes.Count; i++)
         {
             GameObject currentShape;
             switch (gameMode.shapes[i])
@@ -63,13 +63,12 @@ public class EndScreen : MonoBehaviour
             }
             if (currentShape != null)
             {
-                currentShape.transform.SetParent(gameObject.transform, false);
+                currentShape.transform.SetParent(transform, false);
             }
-            NextShapeOffset += 60;
-            
+            position.x += 100; // Increase X position for the next shape
         }
     }
-    
+
     void UpdateTimeText(float minutes, float seconds, float milliseconds)
     {
         // Format the minutes, seconds, and milliseconds into a single string
