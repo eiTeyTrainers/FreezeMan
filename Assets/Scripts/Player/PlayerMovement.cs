@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -76,6 +77,7 @@ public class PlayMovement : MonoBehaviour
             CustomInput.Player.Freeze.performed += Freeze;
             CustomInput.Player.Jump.performed += JumpButtonPressed;
             CustomInput.Player.Jump.canceled += StopJumping;
+            CustomInput.Player.Restart.canceled += RestartButtonPressed;
         }
     }
 
@@ -87,6 +89,7 @@ public class PlayMovement : MonoBehaviour
         CustomInput.Player.Freeze.performed -= Freeze;
         CustomInput.Player.Jump.performed -= JumpButtonPressed;
         CustomInput.Player.Jump.canceled -= StopJumping;
+        CustomInput.Player.Restart.canceled -= RestartButtonPressed;
     }
     
     private void Freeze(InputAction.CallbackContext obj)
@@ -223,5 +226,15 @@ public class PlayMovement : MonoBehaviour
         {
             isGrounded = true;
         }
+    }
+
+    private void RestartButtonPressed(InputAction.CallbackContext obj)
+    {
+        RestartLevel();
+    }
+    
+    private void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
