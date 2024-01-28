@@ -92,34 +92,43 @@ public class PlayMovement : MonoBehaviour
         CustomInput.Player.Restart.canceled -= RestartButtonPressed;
     }
     
-    private void Freeze(InputAction.CallbackContext obj)
+    public void Freeze(InputAction.CallbackContext obj)
     {
-        SpriteSwitcher spriteSwitcher = GetComponent<SpriteSwitcher>();
-        if (spriteSwitcher != null)
-        {
-            spriteSwitcher.isFrozen = true;
-        }
-
-        onFreeze.Invoke();
-        gameObject.tag = "FrozenPlayer";
-        int soundIndex = Random.Range(0, FreezeSounds.Length - 1);
-        Debug.Log(FreezeSounds[soundIndex].name);
-        audioSource.PlayOneShot(FreezeSounds[soundIndex]);
-        
-        isFrozen = true;
-        globalGameMode.FreezeCounter++;
-        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
-        int newLayer = LayerMask.NameToLayer("Ground");
-        gameObject.layer = newLayer;
-        GameObject colliderObject = gameObject.transform.Find("Collider")?.gameObject;
-        if (colliderObject != null)
-        {
-            colliderObject.layer = newLayer;
-        }
-
-        CustomInput.Disable();
         MagazineOfShapes magazineScript = magazineObject.GetComponent<MagazineOfShapes>();
-        Instantiate(magazineScript.resetUI(), SpawnPosition.position, Quaternion.identity);
+
+     
+
+ 
+        if (magazineScript.shapes.Length > 0)
+        {
+            CustomInput.Disable();
+            OnDisable();
+            SpriteSwitcher spriteSwitcher = GetComponent<SpriteSwitcher>();
+            if (spriteSwitcher != null)
+            {
+                spriteSwitcher.isFrozen = true;
+            }
+
+            onFreeze.Invoke();
+            gameObject.tag = "FrozenPlayer";
+            int soundIndex = Random.Range(0, FreezeSounds.Length - 1);
+            Debug.Log(FreezeSounds[soundIndex].name);
+            audioSource.PlayOneShot(FreezeSounds[soundIndex]);
+        
+            isFrozen = true;
+            globalGameMode.FreezeCounter++;
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+            int newLayer = LayerMask.NameToLayer("Ground");
+            gameObject.layer = newLayer;
+            GameObject colliderObject = gameObject.transform.Find("Collider")?.gameObject;
+            if (colliderObject != null)
+            {
+                colliderObject.layer = newLayer;
+            }
+            Instantiate(magazineScript.resetUI(), SpawnPosition.position, Quaternion.identity);
+  
+        }
+   
     
     }
 
